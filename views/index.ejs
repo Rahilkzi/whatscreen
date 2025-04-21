@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Viewer</title>
+<link rel="stylesheet" href="/style.css">
+
+</head>
+<body>
+  <div class="container">
+    <div class="header">📱 Zuzu - Hani</div>
+
+    <form class="filters" method="GET">
+      <input type="text" name="search" placeholder="Search message..." value="<%= search %>">
+      <input type="date" name="date" value="<%= date %>">
+      <button type="submit">Filter</button>
+    </form>
+
+    <div class="chat-area">
+      <% messages.forEach(msg => { %>
+        <div class="message <%= msg.sender === 'Rahil' ? 'me' : 'them' %>">
+          <div><strong><%= msg.sender %></strong></div>
+          <div><%= msg.message %></div>
+          <div class="timestamp"><%= msg.date %> <%= msg.time %></div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</body>
+<script>
+  
+</script>
+</html>
