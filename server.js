@@ -23,7 +23,7 @@ app.get("/api/messages", async (req, res) => {
     );
   }
 
-  // No need to reverse since we want latest messages first
+  messages = messages.reverse(); // Latest first
   const pageSize = 20;
   const startIndex = (page - 1) * pageSize;
   const pagedMessages = messages.slice(startIndex, startIndex + pageSize);
@@ -36,7 +36,21 @@ app.get("/api/messages", async (req, res) => {
   
 app.get("/", async (req, res) => {
   const { search = "", date = "" } = req.query;
-  res.render("index", { search, date });
+  let messages = await parser();
+
+  if (search) {
+    messages = messages.filter((m) =>
+      m.message.toLowerCase().includes(search.toLowerCase()),
+    );
+  }
+
+  if (date) {
+    messages = messages.filter(
+      (m) => m.date === date.split("-").reverse().join("/"),
+    );
+  }
+
+  res.render("index", { messages, search, date });
 });
 
 app.listen(PORT, () => {
