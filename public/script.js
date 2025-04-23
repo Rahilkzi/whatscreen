@@ -67,8 +67,8 @@ function resetAndReload() {
 
 function handleScroll(e) {
   const chatArea = e.target;
-  const scrollThreshold = chatArea.scrollHeight * 0.2;
-  if (chatArea.scrollTop <= scrollThreshold && hasMore && !loading) {
+  const scrollPosition = chatArea.scrollHeight - chatArea.scrollTop - chatArea.clientHeight;
+  if (scrollPosition < 100 && hasMore && !loading) {
     loadMoreMessages();
   }
 }
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatArea = document.querySelector('.chat-area');
   chatArea.style.overflowY = 'auto';
   chatArea.style.height = 'calc(100vh - 120px)';
-  chatArea.style.flexDirection = 'column';
+  chatArea.style.flexDirection = 'column-reverse';
   
   chatArea.addEventListener('scroll', handleScroll);
   
