@@ -15,7 +15,7 @@ body {
   flex-direction: column;
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .header {
@@ -25,7 +25,7 @@ body {
   font-weight: bold;
   font-size: 22px;
   letter-spacing: 1px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -83,12 +83,12 @@ button:hover {
 .message {
   padding: 10px 15px;
   border-radius: 16px;
-  max-width: 65%;
+  max-width: 100%;
   position: relative;
   font-size: 14.5px;
   line-height: 1.4;
   word-break: break-word;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   animation: fadeIn 0.3s ease-in-out;
 }
 
@@ -118,6 +118,13 @@ button:hover {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

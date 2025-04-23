@@ -10,8 +10,9 @@ async function loadMoreMessages(isInitialLoad = false) {
     currentPage = 1;
     hasMore = true;
   }
-  const searchInput = document.querySelector('input[type="text"]').value;
-  const dateInput = document.querySelector('input[type="date"]').value;
+
+  const searchInput = document.querySelector('input[name="search"]').value;
+  const dateInput = document.querySelector('input[name="date"]').value;
   const queryParams = new URLSearchParams({
     search: searchInput,
     date: dateInput,
@@ -27,7 +28,7 @@ async function loadMoreMessages(isInitialLoad = false) {
       const fragment = document.createDocumentFragment();
       data.messages.forEach((msg) => {
         const messageElement = document.createElement("div");
-        messageElement.className = `message ${msg.sender === "Me" ? "me" : "them"}`;
+        messageElement.className = `message ${msg.sender === "Rahil" ? "me" : "them"}`;
         messageElement.innerHTML = `
           <strong>${msg.sender}</strong><br>
           ${msg.message}
@@ -39,7 +40,7 @@ async function loadMoreMessages(isInitialLoad = false) {
       if (isInitialLoad) {
         chatArea.innerHTML = "";
         chatArea.appendChild(fragment);
-        chatArea.scrollTop = 0;
+        chatArea.scrollTop = chatArea.scrollHeight;
       } else {
         chatArea.appendChild(fragment);
       }
@@ -76,7 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatArea = document.querySelector(".chat-area");
   chatArea.style.overflowY = "auto";
   chatArea.style.height = "calc(100vh - 120px)";
-  chatArea.style.flexDirection = "column";
+  chatArea.style.display = "flex";
+  chatArea.style.flexDirection = "column-reverse"; // to scroll up for older msgs
 
   chatArea.addEventListener("scroll", handleScroll);
 
