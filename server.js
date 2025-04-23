@@ -30,10 +30,10 @@ app.get("/api/messages", async (req, res) => {
 
   res.json({
     messages: pagedMessages,
-    hasMore: startIndex + pageSize < messages.length  
+    hasMore: startIndex + pageSize < messages.length,
   });
 });
-  
+
 app.get("/", async (req, res) => {
   const { search = "", date = "" } = req.query;
   let messages = await parser();
