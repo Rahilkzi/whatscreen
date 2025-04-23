@@ -8,6 +8,8 @@ app.set("view engine", "ejs");
 
 // Serve static files from /public
 app.use(express.static(path.join(__dirname, "public")));
+app.set('views', path.join(__dirname, 'views'));  // Ensure this is set correctly
+
 
 // API endpoint for paginated messages (used by frontend JS)
 app.get("/api/messages", async (req, res) => {
