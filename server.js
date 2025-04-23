@@ -7,25 +7,6 @@ const PORT = 3000;
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/api/messages', async (req, res) => {
-  const { search = '', date = '' } = req.query;
-  let messages = await parser();
-
-  if (search) {
-    messages = messages.filter((m) =>
-      m.message.toLowerCase().includes(search.toLowerCase())
-    );
-  }
-
-  if (date) {
-    messages = messages.filter(
-      (m) => m.date === date.split('-').reverse().join('/')
-    );
-  }
-
-  res.json(messages);
-});
-
 
 
 app.get('/', async (req, res) => {
