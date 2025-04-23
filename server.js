@@ -7,10 +7,9 @@ const PORT = 3000;
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-
-app.get('/', async (req, res) => {
-  const { search = '', date = '' } = req.query;
+app.get('/api/messages', async (req, res) => {
+  const { search = '', date = '', page = 1 } = req.query;
+  const pageSize = 50;
   let messages = await parser();
 
   if (search) {
@@ -25,7 +24,23 @@ app.get('/', async (req, res) => {
     );
   }
 
-  res.render('index', { messages, search, date });
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedMessages = messages.slice(startIndex, endIndex);
+
+  res.json({
+    messages: paginatedMessages,
+    hasMore: endIndex < messages.length
+  });
+});
+
+
+
+app.get('/', async (req, res) => {
+  const { search = '', date = '' } = req.query;
+  const initialMessages = await parser();
+  const firstPage = initialMessages.slice(0, 50);
+  res.render('index', { messages: firstPage, search, date });
 });
 
 app.listen(PORT, () => {
