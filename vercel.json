@@ -8,8 +8,12 @@
   ],
   "routes": [
     {
+      "src": "/api/messages",
+      "dest": "/server.js"
+    },
+    {
       "src": "/(.*)",
-      "dest": "vercel.js"
+      "dest": "/server.js"
     }
   ]
 }
