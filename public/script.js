@@ -4,9 +4,13 @@ let loading = false;
 let hasMore = true;
 
 async function loadMoreMessages(isInitialLoad = false) {
-  if (loading || !hasMore) return;
+  if (loading || (!hasMore && !isInitialLoad)) return;
   
   loading = true;
+  if (isInitialLoad) {
+    currentPage = 1;
+    hasMore = true;
+  }
   const searchInput = document.querySelector('input[type="text"]').value;
   const dateInput = document.querySelector('input[type="date"]').value;
   const queryParams = new URLSearchParams({ 
@@ -63,7 +67,8 @@ function resetAndReload() {
 
 function handleScroll(e) {
   const chatArea = e.target;
-  if (chatArea.scrollTop <= 100 && hasMore) {
+  const scrollThreshold = chatArea.scrollHeight * 0.2;
+  if (chatArea.scrollTop <= scrollThreshold && hasMore && !loading) {
     loadMoreMessages();
   }
 }

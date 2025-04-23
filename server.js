@@ -24,7 +24,7 @@ app.get("/api/messages", async (req, res) => {
   }
 
   messages = messages.reverse(); // Latest first
-  const pageSize = 50;
+  const pageSize = 20;
   const startIndex = (page - 1) * pageSize;
   const pagedMessages = messages.slice(startIndex, startIndex + pageSize);
 
