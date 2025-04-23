@@ -53,6 +53,6 @@ app.get("/", async (req, res) => {
   res.render("index", { messages, search, date });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server started at http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server started on port ${PORT}`);
 });
