@@ -38,8 +38,16 @@ app.get('/api/messages', async (req, res) => {
 
 app.get('/', async (req, res) => {
   const { search = '', date = '' } = req.query;
-  const initialMessages = await parser();
-  const firstPage = initialMessages.slice(0, 50);
+  let messages = await parser();
+  
+  if (search) {
+    messages = messages.filter(m => m.message.toLowerCase().includes(search.toLowerCase()));
+  }
+  if (date) {
+    messages = messages.filter(m => m.date === date.split('-').reverse().join('/'));
+  }
+  
+  const firstPage = messages.slice(0, 50);
   res.render('index', { messages: firstPage, search, date });
 });
 

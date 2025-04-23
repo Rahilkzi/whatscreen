@@ -56,7 +56,7 @@ function handleScroll() {
 function resetAndReload() {
   const chatArea = document.querySelector('.chat-area');
   chatArea.innerHTML = '';
-  currentPage = 0;
+  currentPage = 1;
   hasMore = true;
   loadMoreMessages();
 }
@@ -65,6 +65,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatArea = document.querySelector('.chat-area');
   chatArea.style.overflowY = 'auto';
   chatArea.style.height = 'calc(100vh - 120px)';
+  chatArea.style.maxHeight = 'calc(100vh - 120px)';
+  chatArea.style.display = 'flex';
+  chatArea.style.flexDirection = 'column';
+  chatArea.style.gap = '10px';
+
+  // Initial messages from server-side render
+  const initialMessages = Array.from(chatArea.children);
+  if (initialMessages.length > 0) {
+    currentPage = 1;
+  }
 
   chatArea.addEventListener('scroll', handleScroll);
 
@@ -73,6 +83,8 @@ document.addEventListener('DOMContentLoaded', () => {
     input.addEventListener('input', resetAndReload);
   });
 
-  // Initial load
-  loadMoreMessages();
+  // Load more messages if initial load is empty
+  if (initialMessages.length === 0) {
+    loadMoreMessages();
+  }
 });
