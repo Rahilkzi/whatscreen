@@ -8,41 +8,49 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/api/messages", async (req, res) => {
-  try {
-    const { search = "", date = "", page = 1 } = req.query;
-    let messages = await parser();
-    
-    messages = messages.reverse(); // Latest first
+  const { search = "", date = "", page = 1 } = req.query;
+  let messages = await parser();
 
-    if (search) {
-      messages = messages.filter((m) =>
-        m.message.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    if (date) {
-      messages = messages.filter(
-        (m) => m.date === date.split("-").reverse().join("/")
-      );
-    }
-
-    const pageSize = 50;
-    const startIndex = (page - 1) * pageSize;
-    const pagedMessages = messages.slice(startIndex, startIndex + pageSize);
-
-    res.json({
-      messages: pagedMessages,
-      hasMore: startIndex + pageSize < messages.length
-    });
-  } catch (error) {
-    console.error('Error loading messages:', error);
-    res.status(500).json({ error: 'Failed to load messages' });
+  if (search) {
+    messages = messages.filter((m) =>
+      m.message.toLowerCase().includes(search.toLowerCase()),
+    );
   }
-});
 
-app.get("/", (req, res) => {
+  if (date) {
+    messages = messages.filter(
+      (m) => m.date === date.split("-").reverse().join("/"),
+    );
+  }
+
+  messages = messages.reverse(); // Latest first
+  const pageSize = 20;
+  const startIndex = (page - 1) * pageSize;
+  const pagedMessages = messages.slice(startIndex, startIndex + pageSize);
+
+  res.json({
+    messages: pagedMessages,
+    hasMore: startIndex + pageSize < messages.length  
+  });
+});
+  
+app.get("/", async (req, res) => {
   const { search = "", date = "" } = req.query;
-  res.render("index", { search, date });
+  let messages = await parser();
+
+  if (search) {
+    messages = messages.filter((m) =>
+      m.message.toLowerCase().includes(search.toLowerCase()),
+    );
+  }
+
+  if (date) {
+    messages = messages.filter(
+      (m) => m.date === date.split("-").reverse().join("/"),
+    );
+  }
+
+  res.render("index", { messages, search, date });
 });
 
 app.listen(PORT, () => {
