@@ -8,7 +8,7 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/api/messages", async (req, res) => {
-  const { search = "", date = "" } = req.query;
+  const { search = "", date = "", page = 1 } = req.query;
   let messages = await parser();
 
   if (search) {
@@ -23,7 +23,15 @@ app.get("/api/messages", async (req, res) => {
     );
   }
 
-  res.json(messages);
+  messages = messages.reverse(); // Latest first
+  const pageSize = 50;
+  const startIndex = (page - 1) * pageSize;
+  const pagedMessages = messages.slice(startIndex, startIndex + pageSize);
+
+  res.json({
+    messages: pagedMessages,
+    hasMore: startIndex + pageSize < messages.length
+  });
 });
 
 app.get("/", async (req, res) => {
