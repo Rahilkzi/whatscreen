@@ -1,75 +1,27 @@
 
-let currentPage = 1;
-let loading = false;
-let hasMore = true;
-
-async function loadMoreMessages() {
-  if (loading || !hasMore) return;
-  
-  loading = true;
+function loadMessages() {
   const searchInput = document.querySelector('input[type="text"]').value;
   const dateInput = document.querySelector('input[type="date"]').value;
-  const queryParams = new URLSearchParams({ 
-    search: searchInput, 
-    date: dateInput, 
-    page: currentPage 
-  });
+  const queryParams = new URLSearchParams({ search: searchInput, date: dateInput });
 
-  try {
-    const response = await fetch(`/api/messages?${queryParams}`);
-    const data = await response.json();
-    
-    if (data.messages.length > 0) {
+  fetch(`/api/messages?${queryParams}`)
+    .then(response => response.json())
+    .then(messages => {
       const chatArea = document.querySelector('.chat-area');
-      data.messages.forEach(msg => {
-        const messageElement = document.createElement('div');
-        messageElement.className = `message ${msg.sender === 'Me' ? 'me' : 'them'}`;
-        messageElement.innerHTML = `
+      chatArea.innerHTML = messages.map(msg => `
+        <div class="message ${msg.sender === 'Me' ? 'me' : 'them'}">
           <strong>${msg.sender}</strong><br>
           ${msg.message}
           <div class="timestamp">${msg.date} ${msg.time}</div>
-        `;
-        chatArea.appendChild(messageElement);
-      });
-      
-      currentPage++;
-      hasMore = data.hasMore;
-    } else {
-      hasMore = false;
-    }
-  } catch (error) {
-    console.error('Error loading messages:', error);
-  } finally {
-    loading = false;
-  }
-}
-
-function resetAndReload() {
-  const chatArea = document.querySelector('.chat-area');
-  chatArea.innerHTML = '';
-  currentPage = 1;
-  hasMore = true;
-  loadMoreMessages();
-}
-
-function handleScroll(e) {
-  const chatArea = e.target;
-  if (chatArea.scrollHeight - chatArea.scrollTop <= chatArea.clientHeight + 100) {
-    loadMoreMessages();
-  }
+        </div>
+      `).join('');
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const chatArea = document.querySelector('.chat-area');
-  chatArea.style.overflowY = 'auto';
-  chatArea.style.height = 'calc(100vh - 120px)';
-  
-  chatArea.addEventListener('scroll', handleScroll);
-  
   const inputs = document.querySelectorAll('input');
   inputs.forEach(input => {
-    input.addEventListener('input', resetAndReload);
+    input.addEventListener('input', loadMessages);
   });
-  
-  loadMoreMessages();
+  loadMessages();
 });
