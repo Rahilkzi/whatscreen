@@ -3,8 +3,6 @@ const app = express();
 const path = require("path");
 const parser = require("./chat-parser");
 
-const PORT = process.env.PORT || 3000;
-
 // Set view engine
 app.set("view engine", "ejs");
 
@@ -19,7 +17,7 @@ app.get("/api/messages", async (req, res) => {
   // Filter by search term
   if (search) {
     messages = messages.filter((m) =>
-      m.message.toLowerCase().includes(search.toLowerCase()),
+      m.message.toLowerCase().includes(search.toLowerCase())
     );
   }
 
@@ -41,7 +39,7 @@ app.get("/api/messages", async (req, res) => {
   });
 });
 
-// Page render with optional filters (on initial page load)
+
 // Page render with optional filters (on initial page load)
 app.get("/", async (req, res) => {
   const { search = "", date = "" } = req.query;
@@ -49,7 +47,7 @@ app.get("/", async (req, res) => {
 
   if (search) {
     messages = messages.filter((m) =>
-      m.message.toLowerCase().includes(search.toLowerCase()),
+      m.message.toLowerCase().includes(search.toLowerCase())
     );
   }
 
@@ -66,7 +64,5 @@ app.get("/", async (req, res) => {
   res.render("index", { messages: firstPageMessages, search, date });
 });
 
-// Start server
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`✅ Server started on http://localhost:${PORT}`);
-});
+// Export for Vercel's serverless functions
+module.exports = app;
